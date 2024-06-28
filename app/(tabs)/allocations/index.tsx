@@ -1,13 +1,44 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { StyleSheet, View, Text } from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { Link, Stack } from "expo-router";
 
-export default function HomeScreen() {
+export default function Allocation() {
   return (
-    <ParallaxScrollView
+    <View style={styles.Container}>
+      <Stack.Screen options={{ title: "Allocations" }} />
+      <Link href={"/allocations/new"}>
+        <Text>New Allocation</Text>
+      </Link>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  Container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  stepContainer: {
+    gap: 8,
+    marginBottom: 8,
+  },
+  reactLogo: {
+    height: 178,
+    width: 290,
+    bottom: 0,
+    left: 0,
+    position: "absolute",
+  },
+});
+
+{
+  /* <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={
         <Image
@@ -46,25 +77,5 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </ThemedView>
-    </ParallaxScrollView>
-  );
+    </ParallaxScrollView> */
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
