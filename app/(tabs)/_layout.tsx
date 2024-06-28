@@ -13,13 +13,13 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
       }}
     >
       <Tabs.Screen
         name="allocations"
         options={{
           title: "Allocation",
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <MaterialIcons name={"account-tree"} size={28} color={color} />
           ),
