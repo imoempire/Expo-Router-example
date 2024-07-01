@@ -1,17 +1,22 @@
-import { addColumns, schemaMigrations } from '@nozbe/watermelondb/Schema/migrations'
+import {
+  addColumns,
+  createTable,
+  schemaMigrations,
+} from "@nozbe/watermelondb/Schema/migrations";
 
 export default schemaMigrations({
- migrations: [
+  migrations: [
     {
-      toVersion: 2,
+      toVersion: 4,
       steps: [
-        addColumns({
-          table: 'account',
+        createTable({
+          name: "allocations",
           columns: [
-            { name: 'tap', type: 'number' },
+            { name: "created_at", type: "number" },
+            { name: "income", type: "number" },
           ],
         }),
       ],
     },
   ],
-})
+});

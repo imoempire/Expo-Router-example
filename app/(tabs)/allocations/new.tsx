@@ -1,25 +1,93 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, TextInput, Button } from "react-native";
 import { Stack } from "expo-router";
+import { useState } from "react";
+import { alloactionsCollection, database } from "@/src/db";
+import Allocation from "@/src/models/Allocation";
 
 export default function NewAllowcation() {
+  const [NewAllowcation, setNewAllowcation] = useState<{
+    income: string;
+  }>({ income: "" });
+
+  const CreateAccount = async () => {
+    if (NewAllowcation.income === "") {
+      alert("Input value is required to create a new account");
+      return;
+    }
+
+    await database
+      .write(async () => {
+        await alloactionsCollection.create((allocation) => {
+          allocation.income = +NewAllowcation.income;
+        });
+      })
+      .then((res: any) => {
+        setNewAllowcation({ income: "" });
+        console.log(res, "res");
+      })
+      .catch((err: any) => {
+        console.log(err, "err");
+      });
+  };
+
   return (
-    <View>
+    <View style={styles.Container}>
       <Stack.Screen options={{ title: "New Allocation" }} />
-      <Text>New Screen</Text>
+      <View style={styles.Header}>
+        <Text style={{ fontSize: 15, fontWeight: "bold" }}>Income</Text>
+        <TextInput
+          style={{ flex: 1, backgroundColor: "white", padding: 10 }}
+          placeholder="Income"
+          value={NewAllowcation.income}
+          onChangeText={(text: string) =>
+            setNewAllowcation((prevState) => ({ ...prevState, income: text }))
+          }
+        />
+      </View>
+      <Button title="Save" onPress={CreateAccount} />
+      {/* Profit */}
+      {/* <View style={{ padding: 10, gap: 20 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text>Name</Text>
+          <Text>%</Text>
+          <Text>¢123</Text>
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text>Name</Text>
+          <Text>%</Text>
+          <Text>¢123</Text>
+        </View>
+      </View> */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: "#808080",
-    bottom: -90,
-    left: -35,
-    position: "absolute",
+  Container: {
+    paddingHorizontal: 10,
   },
-  titleContainer: {
+  Header: {
     flexDirection: "row",
-    gap: 8,
+    justifyContent: "space-between",
+    padding: 10,
+    alignItems: "center",
+    gap: 10,
+  },
+  Money: {
+    fontSize: 25,
+    fontWeight: "bold",
   },
 });
 
