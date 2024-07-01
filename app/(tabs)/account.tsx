@@ -67,6 +67,16 @@ export default function TabTwoScreen() {
   //   // console.log(account, "postsCollection");
   // };
 
+  // const onRead = async () => {
+  //   database.write(async () => {
+  //     const accounts = await accountsCollection.query().fetch();
+  //     const account = accounts[2];
+  //     account.update((item) => {
+  //       item.name = "Marketplace";
+  //     });
+  //   });
+  // };
+
   return (
     <>
       <Stack.Screen options={{ title: "Account" }} />
@@ -111,7 +121,7 @@ export default function TabTwoScreen() {
           <Entypo name="check" size={20} color="green" />
         </View>
         <Button title="Add Account" onPress={CreateAccount} />
-        {/* <Button title="Read Account" onPress={() => onRead(newAccount)} /> */}
+        {/* <Button title="Read Account" onPress={() => onRead()} /> */}
         {/* <Button title="Drop Account Table" onPress={dropTable} /> */}
         {/* <Button title="Rebuild Database" onPress={rebuildDatabase} /> */}
       </View>

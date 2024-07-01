@@ -1,9 +1,9 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import Card from "./Card";
 import { accountsCollection } from "@/src/db";
 import { withObservables } from "@nozbe/watermelondb/react";
 import Account from "@/src/models/Account";
+import EnhancedCard from "./Card";
 
 const AccountList = ({ Accounts }: { Accounts: Account[] }) => {
   return (
@@ -11,7 +11,7 @@ const AccountList = ({ Accounts }: { Accounts: Account[] }) => {
       data={Accounts}
       contentContainerStyle={{ gap: 10 }}
       renderItem={({ item }) => {
-        return <Card item={item} />;
+        return <EnhancedCard accounts={item} />;
       }}
     />
   );
@@ -20,7 +20,7 @@ const AccountList = ({ Accounts }: { Accounts: Account[] }) => {
 const styles = StyleSheet.create({});
 
 const enhance = withObservables([], () => ({
-  Accounts: accountsCollection.query(),
+  Accounts: accountsCollection.query().observe(),
 }));
 
 const EnhancedAccountList = enhance(AccountList);

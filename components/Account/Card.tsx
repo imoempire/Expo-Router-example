@@ -1,26 +1,26 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Account from "@/src/models/Account";
+import { withObservables } from "@nozbe/watermelondb/react";
+import { accountsCollection } from "@/src/db";
 
 type Card = {
-  item: Account;
+  accounts: Account;
 };
 
-const Card = ({ item }: Card) => {
+const Card = ({ accounts }: Card) => {
   // console.log(item?.tap);
 
   return (
     <View style={styles.BOX}>
-      <Text style={styles.textName}>{item?.name}</Text>
-      <Text style={styles.Percentage}>{item?.cap}%</Text>
+      <Text style={styles.textName}>{accounts?.name}</Text>
+      <Text style={styles.Percentage}>{accounts?.cap}%</Text>
       <Text style={[styles.Percentage, { textAlign: "right" }]}>
-        {item?.tap}%
+        {accounts?.tap}%
       </Text>
     </View>
   );
 };
-
-export default Card;
 
 const styles = StyleSheet.create({
   BOX: {
@@ -40,3 +40,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+const enhance = withObservables(["accounts"], ({ accounts }) => ({
+  accounts: accounts.observe(),
+}));
+
+const EnhancedCard = enhance(Card);
+export default EnhancedCard;
