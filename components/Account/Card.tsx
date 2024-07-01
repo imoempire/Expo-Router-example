@@ -1,15 +1,19 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import Account from "@/src/models/Account";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { accountsCollection } from "@/src/db";
-
+import { accountsCollection, database } from "@/src/db";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 type Card = {
   accounts: Account;
 };
 
 const Card = ({ accounts }: Card) => {
-  // console.log(item?.tap);
+  const OnDelete = async () => {
+    database.write(async () => {
+      await accounts.markAsDeleted();
+    });
+  };
 
   return (
     <View style={styles.BOX}>
@@ -18,6 +22,17 @@ const Card = ({ accounts }: Card) => {
       <Text style={[styles.Percentage, { textAlign: "right" }]}>
         {accounts?.tap}%
       </Text>
+      <TouchableOpacity
+        onPress={() => OnDelete()}
+        activeOpacity={1}
+        style={{
+          flex: 0.5,
+          flexDirection: "row",
+          justifyContent: "flex-end",
+        }}
+      >
+        <MaterialCommunityIcons name="delete" size={20} color="red" />
+      </TouchableOpacity>
     </View>
   );
 };

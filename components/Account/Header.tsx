@@ -26,6 +26,14 @@ const Header = () => {
       >
         TAP
       </Text>
+      <Text
+        style={{
+          flex: .5,
+          textAlign: "right",
+        }}
+      >
+        
+      </Text>
     </View>
   );
 };
