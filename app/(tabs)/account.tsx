@@ -5,12 +5,55 @@ import { Stack } from "expo-router";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
+import { accountsCollection, database } from "@/src/db";
+
 export default function TabTwoScreen() {
   const [newAccount, setNewAccount] = useState<{
     name: string;
     cap: string;
     tab: string;
   }>({ name: "", cap: "", tab: "" });
+
+  const dropTable = async () => {
+    try {
+      await database.write(async () => {
+        await database.unsafeResetDatabase();
+      });
+      console.log("Table dropped successfully");
+    } catch (error) {
+      console.log("Error dropping table:", error);
+    }
+  };
+
+  const rebuildDatabase = async () => {
+    try {
+      await database.adapter.unsafeResetDatabase();
+      console.log("Database rebuilt successfully");
+    } catch (error) {
+      console.log("Error rebuilding database:", error);
+    }
+  };
+
+  const onRead = async (data?: any) => {
+    const account = await accountsCollection.query().fetch();
+
+    console.log(account, "postsCollection");
+
+    await database
+      .write(async () => {
+        await accountsCollection.create((account) => {
+          account.name = "Account C";
+          account.cap = 10.6;
+          account.tap = 20.3;
+        });
+      })
+      .then((res: any) => {
+        console.log(res, "res");
+      })
+      .catch((err: any) => {
+        console.log(err, "err");
+      });
+  };
 
   return (
     <>
@@ -50,6 +93,9 @@ export default function TabTwoScreen() {
           <Entypo name="check" size={20} color="green" />
         </View>
         <Button title="Add Account" />
+        <Button title="Read Account" onPress={() => onRead(newAccount)} />
+        {/* <Button title="Drop Account Table" onPress={dropTable} /> */}
+        {/* <Button title="Rebuild Database" onPress={rebuildDatabase} /> */}
       </View>
     </>
   );
