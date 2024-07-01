@@ -1,14 +1,31 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Pressable } from "react-native";
 
 import { Link, Stack } from "expo-router";
+import EnhancedAccountList from "@/components/Allocation/AllocationList";
 
 export default function Allocation() {
   return (
     <View style={styles.Container}>
       <Stack.Screen options={{ title: "Allocations" }} />
-      <Link href={"/allocations/new"}>
-        <Text>New Allocation</Text>
+      <Link
+        style={{
+          padding: 10,
+          marginVertical: 10,
+          backgroundColor: "green",
+          borderRadius: 10,
+        }}
+        href={"/allocations/new"}
+      >
+        <Text
+          style={{
+            color: "white",
+            textAlign: "center",
+          }}
+        >
+          New Allocation
+        </Text>
       </Link>
+      <EnhancedAccountList />
     </View>
   );
 }
@@ -16,8 +33,9 @@ export default function Allocation() {
 const styles = StyleSheet.create({
   Container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    paddingHorizontal: 10,
+    gap: 20,
+    backgroundColor: 'white'
   },
   titleContainer: {
     flexDirection: "row",

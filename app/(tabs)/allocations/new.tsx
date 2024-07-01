@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, TextInput, Button } from "react-native";
-import { Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import { useState } from "react";
 import { alloactionsCollection, database } from "@/src/db";
 import Allocation from "@/src/models/Allocation";
@@ -24,6 +24,7 @@ export default function NewAllowcation() {
       .then((res: any) => {
         setNewAllowcation({ income: "" });
         console.log(res, "res");
+        router.back()
       })
       .catch((err: any) => {
         console.log(err, "err");
