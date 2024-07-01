@@ -1,19 +1,27 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card from "./Card";
+import { accountsCollection } from "@/src/db";
+import { withObservables } from "@nozbe/watermelondb/react";
+import Account from "@/src/models/Account";
 
-const AccountList = () => {
+const AccountList = ({ Accounts }: { Accounts: Account[] }) => {
   return (
     <FlatList
-      data={[1, 2, 3, 4]}
+      data={Accounts}
       contentContainerStyle={{ gap: 10 }}
       renderItem={({ item }) => {
-        return <Card />;
+        return <Card item={item} />;
       }}
     />
   );
 };
 
-export default AccountList;
-
 const styles = StyleSheet.create({});
+
+const enhance = withObservables([], () => ({
+  Accounts: accountsCollection.query(),
+}));
+
+const EnhancedAccountList = enhance(AccountList);
+export default EnhancedAccountList;

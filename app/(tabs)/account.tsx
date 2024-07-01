@@ -6,6 +6,7 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { useState } from "react";
 import { accountsCollection, database } from "@/src/db";
+import EnhancedAccountList from "@/components/Account/AccountList";
 
 export default function TabTwoScreen() {
   const [newAccount, setNewAccount] = useState<{
@@ -34,26 +35,37 @@ export default function TabTwoScreen() {
     }
   };
 
-  const onRead = async (data?: any) => {
-    const account = await accountsCollection.query().fetch();
-
-    console.log(account, "postsCollection");
+  const CreateAccount = async () => {
+    if (
+      newAccount.name === "" &&
+      newAccount.cap === "" &&
+      newAccount.tab === ""
+    ) {
+      alert("Account credentials are required to create a new account");
+      return;
+    }
 
     await database
       .write(async () => {
         await accountsCollection.create((account) => {
-          account.name = "Account C";
-          account.cap = 10.6;
-          account.tap = 20.3;
+          account.name = newAccount.name;
+          account.cap = +newAccount.cap;
+          account.tap = +newAccount.tab;
         });
       })
       .then((res: any) => {
+        setNewAccount({ name: "", cap: "", tab: "" });
         console.log(res, "res");
       })
       .catch((err: any) => {
         console.log(err, "err");
       });
   };
+
+  // const onRead = async (data?: any) => {
+  //   const account = await accountsCollection.query().fetch();
+  //   // console.log(account, "postsCollection");
+  // };
 
   return (
     <>
@@ -69,7 +81,7 @@ export default function TabTwoScreen() {
           <Header />
         </View>
         <View>
-          <AccountList />
+          <EnhancedAccountList />
         </View>
         <View style={styles.Form}>
           <TextInput
@@ -84,16 +96,22 @@ export default function TabTwoScreen() {
             value={newAccount.cap}
             placeholder="CAP %"
             style={styles.input}
+            onChangeText={(text: string) =>
+              setNewAccount((prevState) => ({ ...prevState, cap: text }))
+            }
           />
           <TextInput
             value={newAccount.tab}
             placeholder="TAP %"
             style={styles.input}
+            onChangeText={(text: string) =>
+              setNewAccount((prevState) => ({ ...prevState, tab: text }))
+            }
           />
           <Entypo name="check" size={20} color="green" />
         </View>
-        <Button title="Add Account" />
-        <Button title="Read Account" onPress={() => onRead(newAccount)} />
+        <Button title="Add Account" onPress={CreateAccount} />
+        {/* <Button title="Read Account" onPress={() => onRead(newAccount)} /> */}
         {/* <Button title="Drop Account Table" onPress={dropTable} /> */}
         {/* <Button title="Rebuild Database" onPress={rebuildDatabase} /> */}
       </View>

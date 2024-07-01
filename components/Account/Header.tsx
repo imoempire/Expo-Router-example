@@ -4,9 +4,28 @@ import React from "react";
 const Header = () => {
   return (
     <View style={styles.BOX}>
-      <Text>Name</Text>
-      <Text>CAP</Text>
-      <Text>TAP</Text>
+      <Text
+        style={{
+          flex: 1.5,
+        }}
+      >
+        Name
+      </Text>
+      <Text
+        style={{
+          flex: 1,
+        }}
+      >
+        CAP
+      </Text>
+      <Text
+        style={{
+          flex: 1,
+          textAlign: "right",
+        }}
+      >
+        TAP
+      </Text>
     </View>
   );
 };
