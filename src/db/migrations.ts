@@ -7,16 +7,8 @@ import {
 export default schemaMigrations({
   migrations: [
     {
-      toVersion: 4,
-      steps: [
-        createTable({
-          name: "allocations",
-          columns: [
-            { name: "created_at", type: "number" },
-            { name: "income", type: "number" },
-          ],
-        }),
-      ],
+      toVersion: 7,
+      steps: [],
     },
   ],
 });

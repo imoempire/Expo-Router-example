@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import Account from "@/src/models/Account";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { accountsCollection, database } from "@/src/db";
+import database, { accountsCollection } from "@/src/db";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 type Card = {
   accounts: Account;

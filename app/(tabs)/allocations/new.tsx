@@ -1,30 +1,51 @@
 import { StyleSheet, View, Text, TextInput, Button } from "react-native";
 import { Stack, router } from "expo-router";
 import { useState } from "react";
-import { alloactionsCollection, database } from "@/src/db";
-import Allocation from "@/src/models/Allocation";
+import {
+  database,
+  accountAlloactionsCollection,
+  accountsCollection,
+  alloactionsCollection,
+} from "@/src/db";
+import { withObservables } from "@nozbe/watermelondb/react";
+import Account from "@/src/models/Account";
 
-export default function NewAllowcation() {
-  const [NewAllowcation, setNewAllowcation] = useState<{
+function NewAllowcation({ accounts }: { accounts: Account[] }) {
+  const [newAllocation, setNewAllocation] = useState<{
     income: string;
-  }>({ income: "" });
+  }>({ income: "0" });
 
   const CreateAccount = async () => {
-    if (NewAllowcation.income === "") {
+    if (newAllocation.income === "") {
       alert("Input value is required to create a new account");
       return;
     }
 
+    let Accounts = accounts[0];
+
+    console.log("Creating allocation...");
+
     await database
       .write(async () => {
-        await alloactionsCollection.create((allocation) => {
-          allocation.income = +NewAllowcation.income;
+        const Allocation = await alloactionsCollection.create((allocation) => {
+          allocation.income = +newAllocation.income;
         });
+
+        await Promise.all(
+          accounts.map((account) =>
+            accountAlloactionsCollection.create((item) => {
+              item.account.set(account);
+              item.allocation.set(Allocation);
+              item.cap = account.cap;
+              item.amount = (Allocation.income * account.cap) / 100;
+            })
+          )
+        );
       })
       .then((res: any) => {
-        setNewAllowcation({ income: "" });
+        setNewAllocation({ income: "" });
         console.log(res, "res");
-        router.back()
+        router.back();
       })
       .catch((err: any) => {
         console.log(err, "err");
@@ -39,11 +60,26 @@ export default function NewAllowcation() {
         <TextInput
           style={{ flex: 1, backgroundColor: "white", padding: 10 }}
           placeholder="Income"
-          value={NewAllowcation.income}
+          value={newAllocation.income}
           onChangeText={(text: string) =>
-            setNewAllowcation((prevState) => ({ ...prevState, income: text }))
+            setNewAllocation((prevState) => ({ ...prevState, income: text }))
           }
         />
+      </View>
+      <View style={{ gap: 10, marginVertical: 10 }}>
+        {accounts?.map((account) => {
+          return (
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+              key={account.id}
+            >
+              <Text>
+                {account?.name} : {account?.cap}%
+              </Text>
+              <Text>¢{(+newAllocation.income * account?.cap) / 100}</Text>
+            </View>
+          );
+        })}
       </View>
       <Button title="Save" onPress={CreateAccount} />
       {/* Profit */}
@@ -75,6 +111,12 @@ export default function NewAllowcation() {
   );
 }
 
+const enhance = withObservables([], () => ({
+  accounts: accountsCollection.query().observe(),
+}));
+
+export default enhance(NewAllowcation);
+
 const styles = StyleSheet.create({
   Container: {
     paddingHorizontal: 10,
@@ -82,7 +124,7 @@ const styles = StyleSheet.create({
   Header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    padding: 10,
+    paddingVertical: 10,
     alignItems: "center",
     gap: 10,
   },

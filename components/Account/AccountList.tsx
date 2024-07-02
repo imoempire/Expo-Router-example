@@ -1,5 +1,5 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { FlatList, StyleSheet } from "react-native";
+import React from "react";
 import { accountsCollection } from "@/src/db";
 import { withObservables } from "@nozbe/watermelondb/react";
 import Account from "@/src/models/Account";

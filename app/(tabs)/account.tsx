@@ -1,11 +1,8 @@
-import AccountList from "@/components/Account/AccountList";
-import Card from "@/components/Account/Card";
 import Header from "@/components/Account/Header";
 import { Stack } from "expo-router";
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { Entypo } from "@expo/vector-icons";
+import { Button, StyleSheet, TextInput, View } from "react-native";
 import { useState } from "react";
-import { accountsCollection, database } from "@/src/db";
+import { database, accountsCollection } from "@/src/db";
 import EnhancedAccountList from "@/components/Account/AccountList";
 
 export default function TabTwoScreen() {
@@ -118,7 +115,6 @@ export default function TabTwoScreen() {
               setNewAccount((prevState) => ({ ...prevState, tab: text }))
             }
           />
-          <Entypo name="check" size={20} color="green" />
         </View>
         <Button title="Add Account" onPress={CreateAccount} />
         {/* <Button title="Read Account" onPress={() => onRead()} /> */}
@@ -140,9 +136,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   input: {
-    flex: 1,
+    // flex: 1,
     // borderWidth: 1,
     // padding: 2,
-    // borderRadius: 2
+    // borderRShadius: 2
   },
 });

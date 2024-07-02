@@ -1,10 +1,11 @@
 import { FlatList, StyleSheet } from "react-native";
-import React from "react";
-import { accountsCollection, alloactionsCollection } from "@/src/db";
+import React, { useEffect } from "react";
+import { accountAlloactionsCollection, alloactionsCollection } from "@/src/db";
 import { withObservables } from "@nozbe/watermelondb/react";
 import EnhancedCard from "./Card";
 import Allocation from "@/src/models/Allocation";
 import { Q } from "@nozbe/watermelondb";
+import AccountAllocation from "@/src/models/AccountAllocations";
 
 const AllocationList = ({ allocations }: { allocations: Allocation[] }) => {
   return (
@@ -12,7 +13,7 @@ const AllocationList = ({ allocations }: { allocations: Allocation[] }) => {
       data={allocations}
       contentContainerStyle={{ gap: 20 }}
       renderItem={({ item }) => {
-        return <EnhancedCard accounts={item} />;
+        return <EnhancedCard allocations={item} />;
       }}
     />
   );

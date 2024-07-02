@@ -1,62 +1,65 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
-import Account from "@/src/models/Account";
+import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect } from "react";
 import { withObservables } from "@nozbe/watermelondb/react";
-import { database } from "@/src/db";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { accountsCollection, database } from "@/src/db";
 import Allocation from "@/src/models/Allocation";
+import AccountAllocation from "@/src/models/AccountAllocations";
+import AccountAllocationItem from "../AccountAllocation/AccountAllocationItem";
 
 type Card = {
-  accounts: Allocation;
+  allocations: Allocation;
+  accountAllocations: AccountAllocation[];
 };
 
-const ItemCard = ({ item, title }: { item: Allocation; title: string }) => {
+const ItemCard = ({
+  item,
+  title,
+}: {
+  item: AccountAllocation;
+  title: string;
+}) => {
+  // console.log(item?.allocation, "namess");
+  const account = async () => {
+    await accountsCollection.find(item?.account);
+    console.log(account, "ggs");
+  };
+  useEffect(() => {
+    async () => {
+      await account();
+    };
+  }, []);
+
   return (
     <View
+      key={item?.id}
       style={{
         flexDirection: "row",
         justifyContent: "space-between",
         padding: 10,
       }}
     >
-      <Text>{title}</Text>
-      <Text>¢{item.income}</Text>
+      <Text>{item?.id}</Text>
+      <Text>¢{item.amount}</Text>
     </View>
   );
 };
 
-const Card = ({ accounts }: Card) => {
-  const OnDelete = async () => {
-    database.write(async () => {
-      await accounts.markAsDeleted();
-    });
-  };
+const Card = ({ allocations, accountAllocations }: Card) => {
+  console.log(accountAllocations?.length);
 
   return (
     <View style={styles.Box}>
       <View style={styles.header}>
         <Text style={styles.Percentage}>
           {/* @ts-ignore */}
-          {accounts?.createdAt?.toLocaleDateString()}
+          {allocations?.createdAt?.toLocaleDateString()}
         </Text>
-        <Text style={styles.textName}>¢{accounts?.income}</Text>
-        {/* <TouchableOpacity
-        onPress={() => OnDelete()}
-        activeOpacity={1}
-        style={{
-          flex: 0.5,
-          flexDirection: "row",
-          justifyContent: "flex-end",
-        }}
-      >
-        <MaterialCommunityIcons name="delete" size={20} color="red" />
-      </TouchableOpacity> */}
+        <Text style={styles.textName}>¢{allocations?.income}</Text>
       </View>
       <View>
-        <ItemCard title="Profit" item={accounts} />
-        <ItemCard title="Owner" item={accounts} />
-        <ItemCard title="Tax" item={accounts} />
-        <ItemCard title="OPEX" item={accounts} />
+        {accountAllocations?.map((allocations: any) => {
+          return <AccountAllocationItem accountAllocation={allocations} />;
+        })}
       </View>
     </View>
   );
@@ -66,12 +69,12 @@ const styles = StyleSheet.create({
   Box: {
     borderRadius: 20,
     borderWidth: 1,
-    backgroundColor: 'gray'
+    backgroundColor: "white",
   },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: "white",
+    backgroundColor: "gainsboro",
     borderRadius: 20,
     padding: 10,
     paddingVertical: 20,
@@ -89,9 +92,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const enhance = withObservables(["accounts"], ({ accounts }) => ({
-  accounts: accounts.observe(),
-}));
+const enhance = withObservables(
+  ["allocations"],
+  ({ allocations }: { allocations: Allocation }) => ({
+    allocations,
+    accountAllocations: allocations.accountAllocation,
+  })
+);
 
 const EnhancedCard = enhance(Card);
 export default EnhancedCard;
