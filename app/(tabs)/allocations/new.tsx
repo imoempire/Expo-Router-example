@@ -23,8 +23,6 @@ function NewAllowcation({ accounts }: { accounts: Account[] }) {
 
     let Accounts = accounts[0];
 
-    console.log("Creating allocation...");
-
     await database
       .write(async () => {
         const Allocation = await alloactionsCollection.create((allocation) => {

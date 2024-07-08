@@ -15,6 +15,7 @@ export default function Allocation() {
           borderRadius: 10,
         }}
         href={"/allocations/new"}
+        // href={"/allocations/new"}
       >
         <Text
           style={{
